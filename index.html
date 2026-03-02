@@ -1,0 +1,542 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Biashara Navigator Enterprise | SME Intelligence System</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <!-- SEO & Meta -->
+    <meta name="description" content="AI-Powered Inventory, Accounting & POS System for Kenyan SMEs">
+    <meta name="author" content="Biashara Navigator">
+
+    <!-- Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+
+    <!-- Icons -->
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" rel="stylesheet">
+
+    <!-- Charts -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+    <!-- Mapping -->
+    <link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css"/>
+    <script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
+
+    <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+
+<div id="enterprise-app">
+
+    <!-- ================= SIDEBAR ================= -->
+    <aside class="enterprise-sidebar">
+        <div class="brand-block">
+            <i class="fas fa-layer-group"></i>
+            <h2>Biashara Navigator</h2>
+            <span class="enterprise-badge">Enterprise</span>
+        </div>
+
+        <nav class="sidebar-menu">
+            <a href="#" class="menu-item active" data-view="dashboard">
+                <i class="fas fa-chart-line"></i>
+                <span>Dashboard</span>
+            </a>
+
+            <a href="#" class="menu-item" data-view="inventory">
+                <i class="fas fa-boxes-stacked"></i>
+                <span>Inventory</span>
+            </a>
+
+            <a href="#" class="menu-item" data-view="pos">
+                <i class="fas fa-cash-register"></i>
+                <span>Point of Sale</span>
+            </a>
+
+            <a href="#" class="menu-item" data-view="reports">
+                <i class="fas fa-chart-pie"></i>
+                <span>Analytics & Reports</span>
+            </a>
+
+            <a href="#" class="menu-item" data-view="expenses">
+                <i class="fas fa-file-invoice-dollar"></i>
+                <span>Expenses</span>
+            </a>
+
+            <a href="#" class="menu-item" data-view="suppliers">
+                <i class="fas fa-truck"></i>
+                <span>Suppliers</span>
+            </a>
+
+            <a href="#" class="menu-item" data-view="settings">
+                <i class="fas fa-gear"></i>
+                <span>Business Settings</span>
+            </a>
+        </nav>
+
+        <div class="sidebar-footer">
+            <div class="user-info">
+                <i class="fas fa-user-circle"></i>
+                <div>
+                    <strong>Owner Mode</strong>
+                    <small>Online</small>
+                </div>
+            </div>
+        </div>
+    </aside>
+
+    <!-- ================= MAIN CONTENT ================= -->
+    <main class="enterprise-main">
+
+        <!-- TOP BAR -->
+        <header class="enterprise-topbar">
+            <div class="topbar-left">
+                <h1 id="dynamic-page-title">Dashboard Overview</h1>
+                <p id="today-date-display"></p>
+            </div>
+
+            <div class="topbar-right">
+                <div class="live-indicator">
+                    <span class="pulse-dot"></span>
+                    Live Monitoring
+                </div>
+
+                <button class="primary-action-btn">
+                    <i class="fas fa-plus"></i>
+                    Quick Add
+                </button>
+            </div>
+        </header>
+
+        <!-- ================= DYNAMIC VIEW CONTAINER ================= -->
+        <section id="view-container">
+<!-- ================= DASHBOARD VIEW ================= -->
+<div id="dashboard" class="view active-view">
+
+    <!-- KPI CARDS -->
+    <div class="kpi-grid">
+
+        <div class="kpi-card sales">
+            <div class="kpi-icon">
+                <i class="fas fa-coins"></i>
+            </div>
+            <div class="kpi-content">
+                <p>Total Revenue Today</p>
+                <h2 id="kpi-revenue">KES 0.00</h2>
+                <span class="kpi-trend positive">
+                    <i class="fas fa-arrow-up"></i> 12% vs yesterday
+                </span>
+            </div>
+        </div>
+
+        <div class="kpi-card expenses">
+            <div class="kpi-icon">
+                <i class="fas fa-file-invoice-dollar"></i>
+            </div>
+            <div class="kpi-content">
+                <p>Total Expenses</p>
+                <h2 id="kpi-expenses">KES 0.00</h2>
+                <span class="kpi-trend negative">
+                    <i class="fas fa-arrow-down"></i> 5% increase
+                </span>
+            </div>
+        </div>
+
+        <div class="kpi-card profit">
+            <div class="kpi-icon">
+                <i class="fas fa-chart-line"></i>
+            </div>
+            <div class="kpi-content">
+                <p>Net Profit</p>
+                <h2 id="kpi-profit">KES 0.00</h2>
+                <span class="kpi-trend positive">
+                    <i class="fas fa-arrow-up"></i> Stable growth
+                </span>
+            </div>
+        </div>
+
+        <div class="kpi-card stock">
+            <div class="kpi-icon">
+                <i class="fas fa-warehouse"></i>
+            </div>
+            <div class="kpi-content">
+                <p>Low Stock Alerts</p>
+                <h2 id="kpi-lowstock">0 Items</h2>
+                <span class="kpi-warning">
+                    AI Monitoring Active
+                </span>
+            </div>
+        </div>
+
+    </div>
+
+    <!-- CHARTS SECTION -->
+    <div class="analytics-grid">
+
+        <!-- SALES TREND -->
+        <div class="analytics-card">
+            <div class="card-header">
+                <h3>Revenue Trend (Last 7 Days)</h3>
+                <select id="trend-filter">
+                    <option>Last 7 Days</option>
+                    <option>Last 30 Days</option>
+                    <option>Last 90 Days</option>
+                </select>
+            </div>
+            <canvas id="salesTrendChart"></canvas>
+        </div>
+
+        <!-- PROFIT BREAKDOWN -->
+        <div class="analytics-card">
+            <div class="card-header">
+                <h3>Profit Breakdown</h3>
+            </div>
+            <canvas id="profitBreakdownChart"></canvas>
+        </div>
+
+    </div>
+
+    <!-- GEOGRAPHICAL SALES MAP -->
+    <div class="analytics-card full-width">
+        <div class="card-header">
+            <h3>Sales Distribution Map (Kenya)</h3>
+        </div>
+        <div id="salesMap" style="height:400px;"></div>
+    </div>
+
+    <!-- LIVE ACTIVITY FEED -->
+    <div class="analytics-card full-width">
+        <div class="card-header">
+            <h3>Live Activity Feed</h3>
+        </div>
+        <div id="activityFeed" class="activity-feed">
+            <div class="activity-item">
+                <i class="fas fa-receipt"></i>
+                <span>New sale recorded by Shop Attendant</span>
+                <small>2 mins ago</small>
+            </div>
+            <div class="activity-item">
+                <i class="fas fa-box"></i>
+                <span>Stock updated: Tilapia +10</span>
+                <small>10 mins ago</small>
+            </div>
+        </div>
+    </div>
+
+</div>
+<!-- ================= INVENTORY VIEW ================= -->
+<div id="inventory" class="view">
+
+    <!-- HEADER -->
+    <div class="section-toolbar">
+        <h2>Inventory Management</h2>
+
+        <div class="toolbar-actions">
+            <button class="secondary-btn" id="bulk-upload-btn">
+                <i class="fas fa-file-import"></i> Bulk Import
+            </button>
+
+            <button class="primary-btn" id="add-product-btn">
+                <i class="fas fa-plus"></i> Add Product
+            </button>
+        </div>
+    </div>
+
+    <!-- FILTER + SEARCH -->
+    <div class="inventory-controls">
+        <input type="text" id="inventory-search" placeholder="Search products...">
+
+        <select id="category-filter">
+            <option value="all">All Categories</option>
+            <option value="vegetables">Vegetables</option>
+            <option value="fish">Fish</option>
+            <option value="cereals">Cereals</option>
+            <option value="retail">Retail Goods</option>
+        </select>
+
+        <select id="stock-filter">
+            <option value="all">All Stock Levels</option>
+            <option value="low">Low Stock</option>
+            <option value="out">Out of Stock</option>
+        </select>
+    </div>
+
+    <!-- INVENTORY TABLE -->
+    <div class="table-wrapper">
+        <table class="enterprise-table">
+            <thead>
+                <tr>
+                    <th>Image</th>
+                    <th>Product Name</th>
+                    <th>Category</th>
+                    <th>Price (KES)</th>
+                    <th>Stock</th>
+                    <th>Reorder Level</th>
+                    <th>Status</th>
+                    <th>Supplier</th>
+                    <th>Actions</th>
+                </tr>
+            </thead>
+
+            <tbody id="inventory-table-body">
+                <!-- Dynamic rows inserted via JS -->
+            </tbody>
+        </table>
+    </div>
+
+    <!-- STOCK HISTORY -->
+    <div class="analytics-card full-width">
+        <div class="card-header">
+            <h3>Stock Movement History</h3>
+        </div>
+
+        <table class="enterprise-table small">
+            <thead>
+                <tr>
+                    <th>Date</th>
+                    <th>Product</th>
+                    <th>Action</th>
+                    <th>Quantity</th>
+                    <th>Performed By</th>
+                </tr>
+            </thead>
+            <tbody id="stock-history-body">
+                <!-- Logs inserted via JS -->
+            </tbody>
+        </table>
+    </div>
+
+</div>
+<!-- ================= ADD / EDIT PRODUCT MODAL ================= -->
+<div id="product-modal" class="modal-overlay">
+
+    <div class="modal-box large">
+
+        <div class="modal-header">
+            <h3 id="product-modal-title">Add New Product</h3>
+            <button class="close-modal">&times;</button>
+        </div>
+
+        <div class="modal-body">
+
+            <div class="form-grid">
+
+                <div class="form-group">
+                    <label>Product Name</label>
+                    <input type="text" id="product-name">
+                </div>
+
+                <div class="form-group">
+                    <label>Category</label>
+                    <select id="product-category">
+                        <option>Vegetables</option>
+                        <option>Fish</option>
+                        <option>Cereals</option>
+                        <option>Retail Goods</option>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label>Price (KES)</label>
+                    <input type="number" id="product-price">
+                </div>
+
+                <div class="form-group">
+                    <label>Current Stock</label>
+                    <input type="number" id="product-stock">
+                </div>
+
+                <div class="form-group">
+                    <label>Reorder Threshold</label>
+                    <input type="number" id="product-reorder">
+                </div>
+
+                <div class="form-group">
+                    <label>Supplier</label>
+                    <input type="text" id="product-supplier">
+                </div>
+
+                <div class="form-group full">
+                    <label>Product Image</label>
+                    <input type="file" id="product-image">
+                </div>
+
+            </div>
+
+        </div>
+
+        <div class="modal-footer">
+            <button class="secondary-btn close-modal">Cancel</button>
+            <button class="primary-btn" id="save-product-btn">Save Product</button>
+        </div>
+
+    </div>
+
+</div>
+<!-- ================= BULK IMPORT MODAL ================= -->
+<div id="bulk-modal" class="modal-overlay">
+
+    <div class="modal-box">
+
+        <div class="modal-header">
+            <h3>Bulk Product Import (CSV)</h3>
+            <button class="close-modal">&times;</button>
+        </div>
+
+        <div class="modal-body">
+            <p>Upload CSV file with columns:</p>
+            <small>Name, Category, Price, Stock, ReorderLevel, Supplier</small>
+            <input type="file" id="csv-upload">
+        </div>
+
+        <div class="modal-footer">
+            <button class="secondary-btn close-modal">Cancel</button>
+            <button class="primary-btn" id="process-csv-btn">Import</button>
+        </div>
+
+    </div>
+
+</div>
+<!-- ================= POS VIEW ================= -->
+<div id="pos" class="view">
+
+    <div class="section-toolbar">
+        <h2>Enterprise Point of Sale</h2>
+    </div>
+
+    <div class="pos-layout-enterprise">
+
+        <!-- PRODUCT AREA -->
+        <div class="pos-products">
+
+            <div class="pos-search-bar">
+                <input type="text" id="pos-search" placeholder="Search product by name or barcode...">
+            </div>
+
+            <div id="pos-product-grid" class="pos-product-grid">
+                <!-- Products inserted dynamically from JS -->
+            </div>
+
+        </div>
+
+        <!-- CART AREA -->
+        <div class="pos-cart">
+
+            <h3>Current Bill</h3>
+
+            <div id="cart-items" class="cart-items">
+                <!-- Cart items inserted dynamically -->
+            </div>
+
+            <div class="cart-summary-enterprise">
+
+                <div class="summary-line">
+                    <span>Subtotal:</span>
+                    <span id="cart-subtotal">KES 0.00</span>
+                </div>
+
+                <div class="summary-line">
+                    <span>Tax (0% configurable):</span>
+                    <span id="cart-tax">KES 0.00</span>
+                </div>
+
+                <div class="summary-line total">
+                    <span>Total:</span>
+                    <span id="cart-total-enterprise">KES 0.00</span>
+                </div>
+
+            </div>
+
+            <!-- PAYMENT METHODS -->
+            <div class="payment-methods">
+
+                <button class="pay-btn mpesa" id="pay-mpesa">
+                    <i class="fas fa-mobile-screen"></i>
+                    Pay with M-Pesa
+                </button>
+
+                <button class="pay-btn cash" id="pay-cash">
+                    <i class="fas fa-money-bill-wave"></i>
+                    Pay with Cash
+                </button>
+
+                <button class="pay-btn split" id="pay-split">
+                    <i class="fas fa-random"></i>
+                    Split Payment
+                </button>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
+<!-- ================= M-PESA MODAL ================= -->
+<div id="mpesa-modal-enterprise" class="modal-overlay">
+
+    <div class="modal-box">
+
+        <div class="modal-header">
+            <h3>M-Pesa STK Push</h3>
+            <button class="close-modal">&times;</button>
+        </div>
+
+        <div class="modal-body">
+
+            <div class="form-group">
+                <label>Customer Phone Number</label>
+                <input type="text" id="mpesa-phone" placeholder="07XXXXXXXX">
+            </div>
+
+            <div class="form-group">
+                <label>Amount</label>
+                <input type="text" id="mpesa-amount" readonly>
+            </div>
+
+        </div>
+
+        <div class="modal-footer">
+            <button class="secondary-btn close-modal">Cancel</button>
+            <button class="primary-btn" id="confirm-mpesa-payment">
+                Send STK Push
+            </button>
+        </div>
+
+    </div>
+
+</div>
+<!-- ================= RECEIPT MODAL ================= -->
+<div id="receipt-modal" class="modal-overlay">
+
+    <div class="modal-box">
+
+        <div class="modal-header">
+            <h3>Receipt Preview</h3>
+            <button class="close-modal">&times;</button>
+        </div>
+
+        <div class="modal-body" id="receipt-content">
+            <!-- Receipt dynamically generated -->
+        </div>
+
+        <div class="modal-footer">
+            <button class="secondary-btn close-modal">Close</button>
+            <button class="primary-btn" id="print-receipt">
+                Print Receipt
+            </button>
+        </div>
+
+    </div>
+
+</div>
+        </section> <!-- END VIEW CONTAINER -->
+
+    </main>
+
+</div> <!-- END ENTERPRISE APP -->
+
+<script src="script.js"></script>
+
+</body>
+</html>
